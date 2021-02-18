@@ -4,6 +4,7 @@
 # Run the test, compare results against the benchmark
 #
 
+import datetime
 from math import isnan
 from sys import exit
 
@@ -63,10 +64,16 @@ for zeff in zlist:
         # reduce time-step. At large times these cases produce noise
         timestep = 1e3
 
+    print(datetime.datetime.now())
+
     # Delete old output files
     shell("rm -f data/BOUT.dmp.*.nc")
 
+    print(datetime.datetime.now())
+
     print("Running drift instability test, zeff = ", zeff, flush=True)
+
+    print(datetime.datetime.now())
 
     # Run the case
     s, out = launch_safe(
@@ -75,6 +82,8 @@ for zeff in zlist:
         mthread=nthreads,
         pipe=True,
     )
+    print(datetime.datetime.now())
+
     with open(f"run.log.{zeff}", "w") as f:
         f.write(out)
 
@@ -86,6 +95,8 @@ for zeff in zlist:
     rho_s = collect("rho_s", path="data", info=False)
     wci = collect("wci", path="data", info=False)
     t_array = collect("t_array", path="data", info=False)
+
+    print(datetime.datetime.now())
 
     dims = np.shape(Ni)
     nt = dims[0]
@@ -213,6 +224,8 @@ for zeff in zlist:
         100.0 * gammadiff,
         "%)",
     )
+
+    print(datetime.datetime.now())
 
     if omegadiff is not None:
         if isnan(omegadiff) or (omegadiff > omega_tol) or (gammadiff > gamma_tol):
