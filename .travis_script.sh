@@ -117,6 +117,11 @@ do
     fi
 done
 
+if [[ ${UNIT} == 1 ]]
+then
+    time make check-unit-tests
+fi
+
 if [[ ${INTEGRATED} == 1 ]]
 then
     export LD_LIBRARY_PATH=$(pwd)/lib:$LD_LIBRARY_PATH
