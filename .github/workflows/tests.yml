@@ -172,6 +172,16 @@ jobs:
         if: ${{ matrix.config.name == 'Coverage' }}
         uses: codecov/codecov-action@v1
 
+      - name: Upload logs
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.config.name }}
+          retention-days: 30
+          path: |
+            "**/tests/integrated/test-*/**/BOUT.log.*"
+            "**/tests/integrated/test-*/run.log.*"
+
   Fedora:
     # This is its own job as it doesn't use most of the steps of the
     # standard_tests
