@@ -117,34 +117,9 @@ do
     fi
 done
 
-if [[ ${UNIT} == 1 ]]
-then
-    time make check-unit-tests
-fi
-
 if [[ ${INTEGRATED} == 1 ]]
 then
     export LD_LIBRARY_PATH=$(pwd)/lib:$LD_LIBRARY_PATH
     cd tests/integrated/test-drift-instability-staggered/
     time ./runtest
-fi
-
-if [[ ${MMS} == 1 ]]
-then
-   time make check-mms-tests
-fi
-
-if [[ ${COVERAGE} == 1 ]]
-then
-    # Ensure that there is a corresponding .gcda file for every .gcno file
-    # This is to try and make the coverage report slightly more accurate
-    # It still won't include, e.g. any solvers we don't build with though
-    find . -name "*.gcno" -exec sh -c 'touch -a "${1%.gcno}.gcda"' _ {} \;
-
-    # Use lcov to generate a report, upload it to codecov.io
-    make code-coverage-capture
-    bash <(curl -s https://codecov.io/bash) -f bout-coverage.info
-
-    #For codacy
-    bash ./.codacy_coverage.sh
 fi

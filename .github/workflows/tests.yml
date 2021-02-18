@@ -124,17 +124,3 @@ jobs:
           path: |
             "**/tests/integrated/test-*/**/BOUT.log.*"
             "**/tests/integrated/test-*/run.log.*"
-
-  Fedora:
-    # This is its own job as it doesn't use most of the steps of the
-    # standard_tests
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: true
-      - name: Build Fedora rawhide
-        run: ./.travis_fedora.sh setup mpich rawhide
-        shell: bash
-        env:
-          TRAVIS_BUILD_DIR: ${{ github.workspace }}
