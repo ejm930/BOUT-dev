@@ -124,6 +124,7 @@ fi
 
 if [[ ${INTEGRATED} == 1 ]]
 then
+    export LD_LIBRARY_PATH=$(pwd)/lib:$LD_LIBRARY_PATH
     cd tests/integrated/test-drift-instability-staggered/
     time ./runtest
 fi
