@@ -4,18 +4,8 @@
 # Run the test, compare results against the benchmark
 #
 
-from __future__ import print_function
-from __future__ import division
-
-from builtins import str, range
-
 from math import isnan
-
-nproc = 2  # Number of processors to run on
-
-# Relative tolerance in frequency and growth rate
-omega_tol = 1e-2
-gamma_tol = 1e-2
+from sys import exit
 
 from boututils.run_wrapper import build_and_log, shell, launch_safe
 from boututils.file_import import file_import
@@ -24,7 +14,12 @@ from boututils.linear_regression import linear_regression
 
 from boutdata.collect import collect
 import numpy as np
-from sys import exit, argv
+
+nproc = 2  # Number of processors to run on
+
+# Relative tolerance in frequency and growth rate
+omega_tol = 1e-2
+gamma_tol = 1e-2
 
 nthreads = 1
 
@@ -69,9 +64,9 @@ for zeff in zlist:
         timestep = 1e3
 
     # Delete old output files
-    shell("rm data/BOUT.dmp.*.nc")
+    shell("rm -f data/BOUT.dmp.*.nc")
 
-    print("Running drift instability test, zeff = ", zeff)
+    print("Running drift instability test, zeff = ", zeff, flush=True)
 
     # Run the case
     s, out = launch_safe(
@@ -80,9 +75,8 @@ for zeff in zlist:
         mthread=nthreads,
         pipe=True,
     )
-    f = open("run.log." + str(zeff), "w")
-    f.write(out)
-    f.close()
+    with open(f"run.log.{zeff}", "w") as f:
+        f.write(out)
 
     # Collect data
     Ni = collect("Ni", path="data", xind=2, yind=20, info=False)
@@ -220,7 +214,7 @@ for zeff in zlist:
         "%)",
     )
 
-    if omegadiff != None:
+    if omegadiff is not None:
         if isnan(omegadiff) or (omegadiff > omega_tol) or (gammadiff > gamma_tol):
             code = 1  # Failed test
             print("  => FAILED")
