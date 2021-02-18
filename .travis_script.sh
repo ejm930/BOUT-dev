@@ -124,8 +124,8 @@ fi
 
 if [[ ${INTEGRATED} == 1 ]]
 then
-    time make check-integrated-tests
-    time py.test-3 tools/pylib/
+    cd tests/integrated/test-drift-instability-staggered/
+    time ./runtest
 fi
 
 if [[ ${MMS} == 1 ]]
