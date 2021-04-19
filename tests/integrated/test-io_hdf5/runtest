@@ -8,7 +8,7 @@
 # Cores: 4
 
 # in metric_3d the vector2d contains 3d fields
-#requires: not metric_3d
+# requires: not metric_3d
 
 from boututils.run_wrapper import build_and_log, shell, launch_safe
 from boutdata.collect import collect

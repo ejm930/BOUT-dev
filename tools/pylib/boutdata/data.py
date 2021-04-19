@@ -211,9 +211,7 @@ class BoutOptions(object):
         return self._pop_impl(key, default)[0]
 
     def _pop_impl(self, key, default=__marker):
-        """Private implementation of pop; also pops metadata
-
-        """
+        """Private implementation of pop; also pops metadata"""
         key_parts = key.split(":", maxsplit=1)
 
         if len(key_parts) > 1:
@@ -239,8 +237,7 @@ class BoutOptions(object):
         return (value, name, parent, comment, inline_comment, comment_whitespace)
 
     def rename(self, old_name, new_name):
-        """Rename old_name to new_name
-        """
+        """Rename old_name to new_name"""
 
         def setattr_nested(parent, key, attr, value):
             """Set one of the comment types on some nested section. Slightly
@@ -259,8 +256,7 @@ class BoutOptions(object):
                 getattr(parent, attr)[key] = value
 
         def ensure_sections(parent, path):
-            """Make sure all the components of path in parent are sections
-            """
+            """Make sure all the components of path in parent are sections"""
             path_parts = path.split(":", maxsplit=1)
 
             def check_is_section(parent, path):
@@ -327,27 +323,19 @@ class BoutOptions(object):
         return self._name
 
     def keys(self):
-        """Returns all keys, including sections and values
-
-        """
+        """Returns all keys, including sections and values"""
         return list(self._sections) + list(self._keys)
 
     def sections(self):
-        """Return a list of sub-sections
-
-        """
+        """Return a list of sub-sections"""
         return self._sections.keys()
 
     def values(self):
-        """Return a list of values
-
-        """
+        """Return a list of values"""
         return self._keys.keys()
 
     def as_dict(self):
-        """Return a nested dictionary of all the options.
-
-        """
+        """Return a nested dictionary of all the options."""
         dicttree = {name: self[name] for name in self.values()}
         dicttree.update({name: self[name].as_dict() for name in self.sections()})
         return dicttree
@@ -375,18 +363,14 @@ class BoutOptions(object):
         return True
 
     def __iter__(self):
-        """Iterates over all keys. First values, then sections
-
-        """
+        """Iterates over all keys. First values, then sections"""
         for k in self._keys:
             yield k
         for s in self._sections:
             yield s
 
     def as_tree(self, indent=""):
-        """Return a string formatted as a pretty version of the options tree
-
-        """
+        """Return a string formatted as a pretty version of the options tree"""
         text = self._name + "\n"
 
         for k in self._keys:
@@ -555,7 +539,7 @@ class BoutOptionsFile(BoutOptions):
             for linenr, line in enumerate(f.readlines()):
                 # First remove comments, either # or ;
                 if line.lstrip().startswith(self.VALID_COMMENTS):
-                    comments.append('#' + line.strip()[1:])
+                    comments.append("#" + line.strip()[1:])
                     continue
                 if line.strip() == "":
                     comments.append(line.strip())
@@ -564,7 +548,7 @@ class BoutOptionsFile(BoutOptions):
                 comment_match = self.COMMENT_REGEX.search(line)
                 if comment_match is not None:
                     line, comment_whitespace, inline_comment = comment_match.groups()
-                    inline_comment = '#' + inline_comment.strip()[1:]
+                    inline_comment = "#" + inline_comment.strip()[1:]
                 else:
                     inline_comment = None
                     comment_whitespace = None
@@ -636,7 +620,7 @@ class BoutOptionsFile(BoutOptions):
                 + "\nEvaluating non-scalar options not available"
             )
 
-    def recalculate_xyz(self, *,  nx=None, ny=None, nz=None):
+    def recalculate_xyz(self, *, nx=None, ny=None, nz=None):
         """
         Recalculate the x, y avd z arrays used to evaluate expressions
         """
@@ -677,9 +661,7 @@ class BoutOptionsFile(BoutOptions):
                     # get nx, ny, nz from output files
                     from boutdata.collect import findFiles
 
-                    file_list = findFiles(
-                        path=os.path.dirname("."), prefix="BOUT.dmp"
-                    )
+                    file_list = findFiles(path=os.path.dirname("."), prefix="BOUT.dmp")
                     with DataFile(file_list[0]) as f:
                         self.nx = f["nx"]
                         self.ny = f["ny"]
@@ -765,7 +747,7 @@ class BoutOptionsFile(BoutOptions):
         return eval(expression)
 
     def write(self, filename=None, overwrite=False):
-        """ Write to BOUT++ options file
+        """Write to BOUT++ options file
 
         This method will throw an error rather than overwriting an existing
         file unless the overwrite argument is set to true.
@@ -937,15 +919,11 @@ class BoutOutputs(object):
         self._DataFileCache = None
 
     def keys(self):
-        """Return a list of available variable names
-
-        """
+        """Return a list of available variable names"""
         return self.varNames
 
     def evolvingVariables(self):
-        """Return a list of names of time-evolving variables
-
-        """
+        """Return a list of names of time-evolving variables"""
         return self.evolvingVariableNames
 
     def redistribute(self, npes, nxpe=None, mxg=2, myg=2, include_restarts=True):
@@ -1138,9 +1116,7 @@ class BoutOutputs(object):
             )
 
     def _collect(self, *args, **kwargs):
-        """Wrapper for collect to pass self._DataFileCache if necessary.
-
-        """
+        """Wrapper for collect to pass self._DataFileCache if necessary."""
         if self._DataFileCaching and self._DataFileCache is None:
             # Need to create the cache
             self._DataFileCache = create_cache(self._path, self._prefix)
@@ -1183,9 +1159,7 @@ class BoutOutputs(object):
             return data
 
     def _removeFirstFromCache(self):
-        """Pop the first item from the OrderedDict _datacache
-
-        """
+        """Pop the first item from the OrderedDict _datacache"""
         item = self._datacache.popitem(last=False)
         self._datacachesize -= item[1].nbytes
 
@@ -1198,9 +1172,7 @@ class BoutOutputs(object):
             yield k
 
     def __str__(self, indent=""):
-        """Print a pretty version of the tree
-
-        """
+        """Print a pretty version of the tree"""
         text = ""
         for k in self.varNames:
             text += indent + k + "\n"
